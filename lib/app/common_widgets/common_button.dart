@@ -1,4 +1,6 @@
+import 'package:base_project/app/constants/app_colors.dart';
 import 'package:base_project/app/constants/app_fonts.dart';
+import 'package:base_project/app/constants/app_loader.dart';
 import 'package:flutter/material.dart';
 
 class CommonButton extends StatelessWidget {
@@ -40,10 +42,7 @@ class CommonButton extends StatelessWidget {
             ? const SizedBox(
                 width: 24,
                 height: 24,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2.5,
-                ),
+                child: AppLoader(color: AppColors.background, strokeWidth: 2.5,)
               )
             : Text(
                 title,
