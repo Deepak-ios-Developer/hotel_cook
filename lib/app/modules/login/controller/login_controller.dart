@@ -15,10 +15,8 @@ class LoginController extends ChangeNotifier {
   ApiResponse _loginResponse = ApiResponse.initial('Login not initiated');
   ApiResponse get loginResponse => _loginResponse;
 
-
   final LoginService _loginService = LoginService();
   final AppStorage _appStorage = AppStorage();
-
 
   void setEmail(String value) {
     email = value;
@@ -30,42 +28,29 @@ class LoginController extends ChangeNotifier {
     notifyListeners();
   }
 
-
-Future<void> loginUser({ LoginRequestData? request
-}) async {
-  _loginResponse = ApiResponse.loading("Logging in...");
-  notifyListeners();
-  try {
-    final response = await _loginService.login(request!);
-    final loginData = LoginResponseData.fromJson(response[Keys.data]);
-    final apiStatus = loginData.status?.toApiStatus();
-    if (apiStatus == ApiStatus.success200) {
-      // Save token using SessionManager
-      _appStorage.setToken(loginData.token ?? '');
-      _loginResponse = ApiResponse.completed(loginData);
-    } else {
-      _loginResponse = ApiResponse.error(
-        'Login failed: ${loginData.message ?? 'Unknown error'}',
-      );
-      printDebug('Login error: ${loginData.message}');
+  Future<void> loginUser({LoginRequestData? request}) async {
+    _loginResponse = ApiResponse.loading("Logging in...");
+    notifyListeners();
+    try {
+      final response = await _loginService.login(request!);
+      final loginData = LoginResponseData.fromJson(response[Keys.data]);
+      final apiStatus = loginData.status?.toApiStatus();
+      if (apiStatus == ApiStatus.success200) {
+        // Save token using SessionManager
+        _appStorage.setToken(loginData.token ?? '');
+        _loginResponse = ApiResponse.completed(loginData);
+      } else {
+        _loginResponse = ApiResponse.error(
+          'Login failed: ${loginData.message ?? 'Unknown error'}',
+        );
+        printDebug('Login error: ${loginData.message}');
+      }
+    } catch (e) {
+      _loginResponse = ApiResponse.error(e.toString());
+      printDebug('Exception occurred: $e');
+    } finally {
+      _loginResponse = ApiResponse.completed("Login process completed");
+      notifyListeners();
     }
-  } catch (e) {
-    _loginResponse = ApiResponse.error(e.toString());
-    printDebug('Exception occurred: $e');
   }
-  notifyListeners();
-}
-
-  
-
-
-
-
-
-
-
-
-
-
-
 }
