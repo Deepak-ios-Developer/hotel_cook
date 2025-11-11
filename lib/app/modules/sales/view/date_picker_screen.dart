@@ -9,10 +9,10 @@ class AppDateRangePickerDialog extends StatefulWidget {
   const AppDateRangePickerDialog({Key? key}) : super(key: key);
 
   @override
-  State<DateRangePickerDialog> createState() => _DateRangePickerDialogState();
+  State<AppDateRangePickerDialog> createState() => _AppDateRangePickerDialogState();
 }
 
-class _DateRangePickerDialogState extends State<DateRangePickerDialog> {
+class _AppDateRangePickerDialogState extends State<AppDateRangePickerDialog> {
   DateTime? _startDate;
   DateTime? _endDate;
   DateTime _displayedMonth = DateTime.now();

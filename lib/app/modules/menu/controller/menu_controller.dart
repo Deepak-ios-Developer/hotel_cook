@@ -23,6 +23,7 @@ class MenuViewModel extends ChangeNotifier {
       category: 'Starters',
       price: 8.00,
       isFavorite: true,
+      imageUrl: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vZHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60',
     ),
     MenuItem(
       id: '2',
@@ -30,6 +31,7 @@ class MenuViewModel extends ChangeNotifier {
       category: 'Starters',
       price: 8.00,
       isFavorite: true,
+      imageUrl: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vZHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60',
     ),
     MenuItem(
       id: '3',
@@ -37,6 +39,7 @@ class MenuViewModel extends ChangeNotifier {
       category: 'Starters',
       price: 8.00,
       isFavorite: true,
+      imageUrl: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vZHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60',
     ),
     MenuItem(
       id: '4',
@@ -44,6 +47,7 @@ class MenuViewModel extends ChangeNotifier {
       category: 'Starters',
       price: 8.00,
       isFavorite: true,
+      imageUrl: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vZHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60',
     ),
     // Add more items for different categories
     MenuItem(
@@ -51,6 +55,7 @@ class MenuViewModel extends ChangeNotifier {
       name: 'Margherita Pizza',
       category: 'Pizza',
       price: 12.00,
+        
     ),
     MenuItem(
       id: '6',

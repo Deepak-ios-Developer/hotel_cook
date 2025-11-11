@@ -5,6 +5,7 @@ import 'package:base_project/app/constants/app_menu_card.dart';
 import 'package:base_project/app/modules/cart/controller/cart_controller.dart';
 import 'package:base_project/app/modules/cart/view/cart_screen.dart';
 import 'package:base_project/app/modules/menu/controller/menu_controller.dart';
+import 'package:base_project/app/modules/menu/views/product_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,38 +22,65 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.appBarColor,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: AppColors.textPrimary),
-          onPressed: () {
-            // Open drawer or menu
-          },
+  backgroundColor: AppColors.appBarColor,
+  elevation: 0,
+  centerTitle: true,
+  leadingWidth: 70,
+  leading: Container(
+    margin: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      shape: BoxShape.circle, // ✅ Makes it perfectly circular
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 6,
+          offset: const Offset(0, 2),
         ),
-        title: Column(
-          children: [
-            Text('Select Menu', style: AppTextStyles.heading3),
-            Text(
-              'May 14, 2025  12:30pm',
-              style: AppTextStyles.caption.copyWith(color: AppColors.primary),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.calendar_today_outlined,
-              color: AppColors.textPrimary,
-            ),
-            onPressed: () {
-              // Open calendar
-            },
+      ],
+    ),
+    child: IconButton(
+      icon: const Icon(Icons.menu, color: AppColors.textPrimary),
+      onPressed: () {},
+    ),
+  ),
+  title: Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Text('Select Menu', style: AppTextStyles.heading3),
+      const SizedBox(height: 2),
+      Text(
+        'May 14, 2025  12:30pm',
+        style: AppTextStyles.caption.copyWith(color: AppColors.primary),
+      ),
+    ],
+  ),
+  actions: [
+    Container(
+      margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle, // ✅ Makes it circular
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
+      child: IconButton(
+        icon: const Icon(Icons.save,
+            color: AppColors.textPrimary),
+        onPressed: () {},
+      ),
+    ),
+  ],
+)
+
+,
       body: _buildMenuItems(context),
       floatingActionButton: _buildCartButton(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -61,211 +89,227 @@ class _MenuScreenState extends State<MenuScreen> {
 
   Widget _buildMenuItems(BuildContext context) {
     return Consumer2<MenuViewModel, CartViewModel>(
-      builder:
-          (context, menu, cart, _) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Search bar at the top
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: CustomInputField(
-                  hintText: 'Search..',
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    size: 20,
-                    color: AppColors.iconColor,
-                  ),
-                  onChanged: (value) => menu.setSearchQuery(value),
-                ),
-              ),
-
-              // Category Header with dropdown
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: InkWell(
-                  onTap: () {
-                    // Show category selection dialog
-                    setState(() => isDialogOpen = true);
-                    _showCategoryDialog(context, menu);
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        menu.selectedCategory,
-                        style: AppTextStyles.heading3,
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(
-                        Icons.keyboard_arrow_down,
-                        color: AppColors.textPrimary,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Menu Items List
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: menu.filteredItems.length,
-                  itemBuilder: (context, index) {
-                    final item = menu.filteredItems[index];
-                    return MenuItemCard(
-                      item: item,
-                      onAddPressed: () {},
-                      onFavoritePressed: () => menu.toggleFavorite(item.id),
-                    );
-                  },
-                ),
-              ),
-            ],
+      builder: (context, menu, cart, _) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: CustomInputField(
+              hintText: 'Search...',
+              prefixIcon: const Icon(Icons.search,
+                  size: 20, color: AppColors.iconColor),
+              onChanged: (value) => menu.setSearchQuery(value),
+            ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: InkWell(
+              onTap: () {
+                setState(() => isDialogOpen = true);
+                _showCategoryDialog(context, menu);
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(menu.selectedCategory, style: AppTextStyles.heading3),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.keyboard_arrow_down,
+                      color: AppColors.textPrimary),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: menu.filteredItems.length,
+              itemBuilder: (context, index) {
+                final item = menu.filteredItems[index];
+                return MenuItemCard(
+  item: item,
+  onAddPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ProductDetailScreen(
+          productName: item.name,
+          price: item.price,
+        ),
+      ),
+    );
+  },
+  onFavoritePressed: () => menu.toggleFavorite(item.id),
+);
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildCartButton(BuildContext context) {
     return Consumer<CartViewModel>(
       builder: (context, cart, _) {
-        return SizedBox(
-          height: 90,
+        return Container(
+          height: 180,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, -2),
+              ),
+            ],
+          ),
           child: Stack(
             clipBehavior: Clip.none,
-            alignment: Alignment.bottomCenter,
+            alignment: Alignment.topCenter,
             children: [
-              // Bottom Container
+              // Main content container
               Positioned(
-                bottom: 0,
                 left: 0,
                 right: 0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, -2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
+                bottom: 0,
+                top: 20,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+                  child: Column(
                     children: [
-                      // Left Section - View Cart
-                      Expanded(
-                        child: InkWell(
-                          onTap:
-                              () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const CartScreen(),
-                                ),
+                      // Top section with View Cart and Payment Icons
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const CartScreen(),
                               ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'View Cart',
-                                    style: AppTextStyles.body2.copyWith(
-                                      color: AppColors.textPrimary,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Icon(
-                                    Icons.credit_card,
-                                    size: 16,
-                                    color: AppColors.iconColor,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  const Icon(
-                                    Icons.qr_code,
-                                    size: 16,
-                                    color: AppColors.iconColor,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  const Icon(
-                                    Icons.payments_outlined,
-                                    size: 16,
-                                    color: AppColors.iconColor,
-                                  ),
-                                ],
+                            ),
+                            child: const Text(
+                              'View Cart',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
                               ),
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Total',
-                                    style: AppTextStyles.caption.copyWith(
-                                      color: AppColors.textSecondary,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    '£ ${cart.items.isEmpty ? "0.00" : cart.total.toStringAsFixed(2)}',
-                                    style: AppTextStyles.heading3.copyWith(
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-
-                      const SizedBox(width: 80),
-
-                      // Right Section - Print Bill
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            // Handle print action
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: AppColors.background,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Icon(
-                                  Icons.print_outlined,
-                                  color: AppColors.textPrimary,
-                                  size: 22,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
+                          Row(
+                            children: const [
+                              Icon(Icons.circle,
+                                  size: 10, color: AppColors.primary),
+                              SizedBox(width: 8),
                               Text(
-                                'Print Bill',
-                                style: AppTextStyles.body2.copyWith(
+                                'Card',
+                                style: TextStyle(
                                   color: AppColors.textPrimary,
                                   fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              SizedBox(width: 16),
+                              Icon(Icons.circle,
+                                  size: 10, color: AppColors.textSecondary),
+                              SizedBox(width: 8),
+                              Text(
+                                'Cash',
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              SizedBox(width: 16),
+                              Icon(Icons.circle,
+                                  size: 10, color: AppColors.textSecondary),
+                              SizedBox(width: 8),
+                              Text(
+                                'UPI',
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 14,
                                 ),
                               ),
                             ],
                           ),
-                        ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      // Bottom section with Total and Print Bill
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
+                                'Total',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '£ ${cart.items.isEmpty ? "0.00" : cart.total.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                          InkWell(
+                            onTap: () {},
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 14,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.background,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Icon(
+                                    Icons.print_outlined,
+                                    color: AppColors.textSecondary,
+                                    size: 22,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Print Bill',
+                                    style: TextStyle(
+                                      color: AppColors.textSecondary,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ),
-
-              // Center Circle Button - Changes icon based on dialog state
+              // Floating button
               Positioned(
-                top: 0,
+                top: -35,
                 child: InkWell(
                   onTap: () {
                     if (isDialogOpen) {
@@ -280,8 +324,8 @@ class _MenuScreenState extends State<MenuScreen> {
                     }
                   },
                   child: Container(
-                    width: 64,
-                    height: 64,
+                    width: 70,
+                    height: 70,
                     decoration: BoxDecoration(
                       color: AppColors.primary,
                       shape: BoxShape.circle,
@@ -296,7 +340,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     child: Icon(
                       isDialogOpen ? Icons.close : Icons.apps,
                       color: Colors.white,
-                      size: 28,
+                      size: 32,
                     ),
                   ),
                 ),
@@ -308,6 +352,9 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
+
+
+  /// ✅ Updated Dialog with proper bottom curve cutout
   void _showCategoryDialog(BuildContext context, MenuViewModel menuViewModel) {
     showDialog(
       context: context,
@@ -315,12 +362,11 @@ class _MenuScreenState extends State<MenuScreen> {
       builder: (BuildContext context) {
         return Stack(
           children: [
-            // Dialog with curved bottom cutout
             Positioned(
               left: 16,
               right: 16,
-              top: 60,
-              bottom: 100, // Space for the bottom button
+              top: 150,
+              bottom: 180, // Adjusted to account for button container
               child: Material(
                 color: Colors.transparent,
                 child: ClipPath(
@@ -328,91 +374,51 @@ class _MenuScreenState extends State<MenuScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(28),
+                      borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.15),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
+                          blurRadius: 15,
+                          offset: const Offset(0, 6),
                         ),
                       ],
                     ),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 30),
-
-                        // Title
-                        Text(
-                          'Select Category',
-                          style: AppTextStyles.heading2.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        // Categories Grid
-                        Expanded(
-                          child: GridView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 12,
-                                  childAspectRatio: 1,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.only(
+                        top: 16,
+                        bottom: 40, // Extra padding for curve
+                        left: 16,
+                        right: 16,
+                      ),
+                      shrinkWrap: true,
+                      itemCount: menuViewModel.categories.length,
+                      separatorBuilder: (context, index) => Divider(
+                        color: Colors.grey.shade300,
+                        height: 1,
+                      ),
+                      itemBuilder: (context, index) {
+                        final category = menuViewModel.categories[index];
+                        return InkWell(
+                          onTap: () {
+                            // menuViewModel.setSelectedCategory(category);
+                            Navigator.pop(context);
+                            setState(() => isDialogOpen = false);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 14, horizontal: 20),
+                            child: Center(
+                              child: Text(
+                                category,
+                                style: AppTextStyles.body2.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                            itemCount: menuViewModel.categories.length,
-                            itemBuilder: (context, index) {
-                              final category = menuViewModel.categories[index];
-                              return InkWell(
-                                onTap: () {
-                                  // menuViewModel.setSelectedCategory(category);
-                                  Navigator.pop(context);
-                                  setState(() => isDialogOpen = false);
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.surface,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: AppColors.primary.withOpacity(0.2),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.restaurant_menu,
-                                        color: AppColors.primary,
-                                        size: 32,
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 4,
-                                        ),
-                                        child: Text(
-                                          category,
-                                          style: AppTextStyles.body2.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
+                              ),
+                            ),
                           ),
-                        ),
-
-                        const SizedBox(height: 80), // Space for bottom curve
-                      ],
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -421,61 +427,58 @@ class _MenuScreenState extends State<MenuScreen> {
           ],
         );
       },
-    ).then((_) {
-      setState(() => isDialogOpen = false);
-    });
+    ).then((_) => setState(() => isDialogOpen = false));
   }
 }
 
-// Custom clipper for bottom circle cutout
+/// 🔹 Custom clipper for curved bottom (for floating button cutout)
 class BottomCircleClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
 
-    // Start from top-left with rounded corner
-    path.moveTo(0, 28);
-    path.quadraticBezierTo(0, 0, 28, 0);
-
+    // Rounded top-left corner
+    path.moveTo(0, 20);
+    path.quadraticBezierTo(0, 0, 20, 0);
+    
     // Top edge
-    path.lineTo(size.width - 28, 0);
+    path.lineTo(size.width - 20, 0);
+    
+    // Rounded top-right corner
+    path.quadraticBezierTo(size.width, 0, size.width, 20);
 
-    // Top-right rounded corner
-    path.quadraticBezierTo(size.width, 0, size.width, 28);
+    // Right edge down
+    path.lineTo(size.width, size.height - 20);
 
-    // Right edge down to bottom curve
-    path.lineTo(size.width, size.height - 10);
+    // Move towards center before the curve (from right)
+    path.lineTo(size.width / 2 + 120, size.height - 20);
 
-    // Right side before curve
-    path.lineTo(size.width / 2 + 70, size.height - 10);
-
-    // Smooth curve into the circle cutout
+    // Smooth transition into the curve (right side)
     path.quadraticBezierTo(
-      size.width / 2 + 58,
-      size.height - 10,
-      size.width / 2 + 48,
-      size.height + 5,
+      size.width / 2 + 80,
+      size.height - 20,
+      size.width / 2 + 60,
+      size.height,
     );
 
-    // Large semi-circle cutout for button (increased radius)
+    // Semi-circle cutout for the button
     path.arcToPoint(
-      Offset(size.width / 2 - 48, size.height + 5),
+      Offset(size.width / 2 - 60, size.height),
       radius: const Radius.circular(60),
       clockwise: false,
     );
 
-    // Smooth curve out from the circle
+    // Smooth transition out of the curve (left side)
     path.quadraticBezierTo(
-      size.width / 2 - 58,
-      size.height - 10,
-      size.width / 2 - 70,
-      size.height - 10,
+      size.width / 2 - 80,
+      size.height - 20,
+      size.width / 2 - 120,
+      size.height - 20,
     );
 
-    // Left side of bottom
-    path.lineTo(0, size.height - 10);
-
-    // Close path
+    // Left edge back up
+    path.lineTo(0, size.height - 20);
+    
     path.close();
 
     return path;
@@ -484,3 +487,6 @@ class BottomCircleClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
+
+
+

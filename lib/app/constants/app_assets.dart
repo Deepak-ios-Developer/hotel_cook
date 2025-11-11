@@ -1,6 +1,6 @@
 class AppImages {
-  static const logo = 'assets/images/logo.png';
-  static const placeholder = 'assets/images/placeholder.png';
+  static const redDot = 'assets/images/redDot.png';
+  static const meal = 'assets/images/meal.png';
 }
 
 
