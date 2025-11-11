@@ -1,8 +1,6 @@
 import 'package:base_project/app/constants/app_button.dart';
 import 'package:base_project/app/constants/app_colors.dart';
 import 'package:base_project/app/constants/app_fonts.dart';
-import 'package:base_project/app/constants/app_user_card.dart';
-import 'package:base_project/app/constants/custom_app_bar.dart';
 import 'package:base_project/app/modules/menu/views/menu_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

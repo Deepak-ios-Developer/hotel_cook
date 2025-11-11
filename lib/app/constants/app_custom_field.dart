@@ -7,7 +7,7 @@ class CustomInputField extends StatelessWidget {
   final TextEditingController? controller;
   final Widget? prefixIcon;
 
-  const CustomInputField({Key? key, required this.hintText, this.controller, this.prefixIcon}) : super(key: key);
+  const CustomInputField({Key? key, required this.hintText, this.controller, this.prefixIcon, required void Function(dynamic value) onChanged}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
