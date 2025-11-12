@@ -71,12 +71,12 @@ InkWell(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _buildDropdownItem(context, 'Today', overlay!),
-                    _buildDropdownItem(context, 'Yesterday', overlay!),
-                    _buildDropdownItem(context, 'This Week', overlay!),
-                    _buildDropdownItem(context, 'Last Week', overlay!),
-                    _buildDropdownItem(context, 'This Month', overlay!),
-                    _buildDropdownItem(context, 'Last Month', overlay!),
-                    _buildDropdownItem(context, 'Custom Range', overlay!, isLast: true),
+                    _buildDropdownItem(context, 'Yesterday', overlay),
+                    _buildDropdownItem(context, 'This Week', overlay),
+                    _buildDropdownItem(context, 'Last Week', overlay),
+                    _buildDropdownItem(context, 'This Month', overlay),
+                    _buildDropdownItem(context, 'Last Month', overlay),
+                    _buildDropdownItem(context, 'Custom Range', overlay, isLast: true),
                   ],
                 ),
               ),
@@ -389,101 +389,5 @@ Widget _buildDropdownItem(
     );
   }
 
-  /// 🔹 Bottom Filter Sheet
-  void _showFilterBottomSheet(BuildContext context) {
-  showDialog(
-    context: context,
-    barrierDismissible: true,
-    barrierColor: Colors.black.withOpacity(0.3),
-    builder: (context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 15,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Dialog Header
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Select Date Range',
-                      style: AppTextStyles.heading3
-                          .copyWith(fontWeight: FontWeight.w600),
-                    ),
-                    InkWell(
-                      onTap: () => Navigator.pop(context),
-                      child: const Icon(Icons.close, color: AppColors.textPrimary),
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(height: 1, color: AppColors.border),
-
-              // Filter Options
-              _buildFilterOption(context, 'Today'),
-              _buildFilterOption(context, 'Yesterday'),
-              _buildFilterOption(context, 'This Week'),
-              _buildFilterOption(context, 'Last Week'),
-              _buildFilterOption(context, 'This Month'),
-              _buildFilterOption(context, 'Last Month'),
-              _buildFilterOption(context, 'Custom Range', isLast: true),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
-
-
-  Widget _buildFilterOption(BuildContext context, String label,
-      {bool isLast = false}) {
-    return InkWell(
-      onTap: () {
-        if (label == 'Custom Range') {
-          Navigator.pop(context);
-          showDialog(
-            context: context,
-            builder: (context) => const AppDateRangePickerDialog(),
-          );
-        } else {
-          Provider.of<SalesViewModel>(context, listen: false).setFilter(label);
-          Navigator.pop(context);
-        }
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-        decoration: BoxDecoration(
-          border: isLast
-              ? null
-              : const Border(bottom: BorderSide(color: AppColors.border)),
-        ),
-        child: Row(
-          children: [
-            Text(label, style: AppTextStyles.body1),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year}';
-  }
+  
 }

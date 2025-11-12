@@ -2,7 +2,6 @@ import 'package:base_project/app/constants/app_colors.dart';
 import 'package:base_project/app/constants/app_custom_field.dart';
 import 'package:base_project/app/constants/app_fonts.dart';
 import 'package:base_project/app/constants/app_menu_card.dart';
-import 'package:base_project/app/constants/side_menu_route.dart';
 import 'package:base_project/app/modules/cart/controller/cart_controller.dart';
 import 'package:base_project/app/modules/cart/view/cart_screen.dart';
 import 'package:base_project/app/modules/menu/controller/menu_controller.dart';
