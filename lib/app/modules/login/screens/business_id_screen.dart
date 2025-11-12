@@ -1,9 +1,11 @@
+import 'package:base_project/app/constants/app_assets.dart';
 import 'package:base_project/app/constants/app_button.dart';
 import 'package:base_project/app/constants/app_colors.dart';
 import 'package:base_project/app/constants/app_custom_field.dart';
 import 'package:base_project/app/constants/app_fonts.dart';
 import 'package:base_project/app/modules/login/controller/login_controller.dart';
 import 'package:base_project/app/modules/login/screens/select_user_screen.dart';
+import 'package:base_project/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,25 +25,12 @@ class BusinessIdScreen extends StatelessWidget {
                   (context, auth, _) => Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'e',
-                            style: TextStyle(
-                              fontSize: 48,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 40),
+                     Image(
+              image: const AssetImage(AppImages.appIcon),
+              width: 100,
+              height: 100,
+            ),
+                      const SizedBox(height: 20),
                       Text(
                         'Enter Your Business ID',
                         style: AppTextStyles.heading2,
@@ -52,7 +41,7 @@ class BusinessIdScreen extends StatelessWidget {
                         hintText: 'Business ID',
                         prefixIcon: const Icon(
                           Icons.business,
-                          color: AppColors.iconColor,
+                          color: AppColors.primary,
                         ),
                         onChanged: (value) => auth.setBusinessId(value),
                       ),
@@ -79,12 +68,8 @@ class BusinessIdScreen extends StatelessWidget {
                       PrimaryButton(
                         text: 'Start',
                         onPressed:
-                            () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const SelectUserScreen(),
-                              ),
-                            ),
+                            () => Navigator.pushNamed(context, AppRoutes.selectUser)
+
                       ),
                     ],
                   ),

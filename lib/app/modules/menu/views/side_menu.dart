@@ -1,4 +1,6 @@
+import 'package:base_project/app/constants/app_assets.dart';
 import 'package:base_project/app/modules/menu/views/profile_screen.dart';
+import 'package:base_project/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:base_project/app/constants/app_colors.dart';
 import 'package:base_project/app/constants/app_fonts.dart';
@@ -9,36 +11,33 @@ class CustomSideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Material(
       color: Colors.transparent,
       child: Container(
-        color: Colors.grey.shade100,
-
         width: screenWidth * 0.8,
-
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+        height: screenHeight*5, // ✅ fills full screen height
+        color: Colors.grey.shade100,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 60),
+              // Profile Section
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Color(0xFFFFA726),
-                      child: Icon(Icons.person, size: 35, color: Colors.white),
-                    ),
+                     Image(
+              image: const AssetImage(AppImages.profile),
+              width: 80,
+              height: 80,
+            ),
                     const SizedBox(width: 12),
                     Text(
                       "Jimmy Bob",
@@ -49,22 +48,20 @@ class CustomSideMenu extends StatelessWidget {
                   ],
                 ),
               ),
-
+        
               const SizedBox(height: 25),
+              // Menu Items
               _buildMenuItem(
                 icon: Icons.person_outline,
                 label: "Profile",
                 hasTrailing: true,
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(),
-                    ),
-                  );
+                 Navigator.pushNamed(context, AppRoutes.profile);
+
                 },
               ),
+              const SizedBox(height: 12),
               _buildMenuItem(
                 icon: Icons.headset_mic_outlined,
                 label: "Support",
@@ -80,11 +77,13 @@ class CustomSideMenu extends StatelessWidget {
                 label: "Dark Mode",
                 onTap: () {},
               ),
+              const SizedBox(height: 12),
               _buildMenuItem(
                 icon: Icons.logout,
                 label: "Log Out",
                 onTap: () {},
               ),
+              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -102,17 +101,13 @@ class CustomSideMenu extends StatelessWidget {
     bool hasTrailing = false,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: bgColor ?? Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
-        leading: Icon(
-          icon,
-          color: iconColor ?? AppColors.textPrimary,
-          size: 22,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        leading: Icon(icon, color: iconColor ?? AppColors.textPrimary, size: 22),
         title: Text(
           label,
           style: AppTextStyles.body2.copyWith(
@@ -120,13 +115,9 @@ class CustomSideMenu extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        trailing:
-            hasTrailing
-                ? Icon(
-                  Icons.chevron_right,
-                  color: color ?? AppColors.textPrimary,
-                )
-                : null,
+        trailing: hasTrailing
+            ? Icon(Icons.chevron_right, color: color ?? AppColors.textPrimary)
+            : null,
         onTap: onTap,
       ),
     );

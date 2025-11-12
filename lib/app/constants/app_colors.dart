@@ -13,6 +13,7 @@ class AppColors {
   static const Color redIndicator = Color(0xFFFF3B30);
   static const Color lightPurple = Color(0xFFEFECFF);
   static const Color lightGreen = Color.fromARGB(255, 40, 130, 106);
-    static  Color appBarColor = Colors.grey.shade100;
+  static Color appBarColor = Colors.grey.shade200;
+    static Color containerColor = Colors.grey.shade300;
 
 }

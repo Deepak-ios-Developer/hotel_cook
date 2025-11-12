@@ -1,3 +1,4 @@
+import 'package:base_project/app/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:base_project/app/constants/app_colors.dart';
 import 'package:base_project/app/constants/app_fonts.dart';
@@ -30,11 +31,7 @@ class ProfileScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Color(0xFFFFA726),
-                    child: Icon(Icons.person, size: 35, color: Colors.white),
-                  ),
+                              Image.asset(AppImages.profile, width: 80, height: 80),
                   const SizedBox(width: 12),
                   Text(
                     "Jimmy Bob",

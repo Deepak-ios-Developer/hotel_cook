@@ -2,6 +2,7 @@ import 'package:base_project/app/constants/app_button.dart';
 import 'package:base_project/app/constants/app_colors.dart';
 import 'package:base_project/app/constants/app_fonts.dart';
 import 'package:base_project/app/modules/menu/views/menu_screen.dart';
+import 'package:base_project/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -50,7 +51,7 @@ class PasscodeScreen extends StatelessWidget {
                     final success = await auth.verifyPasscode();
                     if (success) {
                       auth.clearPasscode();
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MenuScreen()));
+Navigator.pushReplacementNamed(context, AppRoutes.menu);
                     }
                   },
                   isLoading: auth.isLoading,
@@ -105,8 +106,14 @@ class PasscodeScreen extends StatelessWidget {
 
   Widget _buildNumButton(String number, AuthViewModel auth) {
     return InkWell(
+      splashColor: Colors.transparent,
       onTap: () => auth.addPasscodeDigit(number),
       child: Container(
+        
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppColors.containerColor,
+        ),
         width: 80,
         height: 80,
         alignment: Alignment.center,

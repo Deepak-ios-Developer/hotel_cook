@@ -5,6 +5,7 @@ import 'package:base_project/app/constants/app_fonts.dart';
 import 'package:base_project/app/constants/custom_app_bar.dart';
 import 'package:base_project/app/modules/cart/controller/cart_controller.dart';
 import 'package:base_project/app/modules/sales/view/sales_report_screen.dart';
+import 'package:base_project/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -230,10 +231,8 @@ class CartScreen extends StatelessWidget {
                   PrimaryButton(
                     text: 'Print Bill',
                     icon: Icons.print,
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const SalesReportScreen()),
-                    ),
+                    onPressed: () => Navigator.pushNamed(context, AppRoutes.salesReport)
+
                   ),
                 ],
               ),

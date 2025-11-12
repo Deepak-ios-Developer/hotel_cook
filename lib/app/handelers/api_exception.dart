@@ -50,7 +50,7 @@ class ExceptionHandler {
       if ((message?.contains(AppStrings.unauthorizedException) ?? false) ||
           (message?.contains(AppStrings.tokenExpired) ?? false)) {
         showCommonSnackbar(context, message: 'Invalid Credentials');
-        Navigator.pushNamed(context, AppRoutes.login);
+        // Navigator.pushNamed(context, AppRoutes.login);
       } else if (message == AppStrings.errorNetwork) {
         //TODO: Design No internet page
 

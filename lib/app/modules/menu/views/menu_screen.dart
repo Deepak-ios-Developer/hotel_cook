@@ -3,10 +3,9 @@ import 'package:base_project/app/constants/app_custom_field.dart';
 import 'package:base_project/app/constants/app_fonts.dart';
 import 'package:base_project/app/constants/app_menu_card.dart';
 import 'package:base_project/app/modules/cart/controller/cart_controller.dart';
-import 'package:base_project/app/modules/cart/view/cart_screen.dart';
 import 'package:base_project/app/modules/menu/controller/menu_controller.dart';
-import 'package:base_project/app/modules/menu/views/product_detail_screen.dart';
 import 'package:base_project/app/modules/menu/views/side_menu.dart';
+import 'package:base_project/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -147,15 +146,13 @@ class _MenuScreenState extends State<MenuScreen> {
                     return MenuItemCard(
                       item: item,
                       onAddPressed: () {
-                        Navigator.push(
+                        Navigator.pushNamed(
                           context,
-                          MaterialPageRoute(
-                            builder:
-                                (_) => ProductDetailScreen(
-                                  productName: item.name,
-                                  price: item.price,
-                                ),
-                          ),
+                          AppRoutes.productDetail,
+                          arguments: {
+                            'productName': item.name,
+                            'price': item.price,
+                          },
                         );
                       },
                       onFavoritePressed: () => menu.toggleFavorite(item.id),
@@ -208,12 +205,11 @@ class _MenuScreenState extends State<MenuScreen> {
                         children: [
                           InkWell(
                             onTap:
-                                () => Navigator.push(
+                                () => Navigator.pushNamed(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (_) => const CartScreen(),
-                                  ),
+                                  AppRoutes.cart,
                                 ),
+
                             child: const Text(
                               'View Cart',
                               style: TextStyle(
@@ -383,85 +379,86 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   /// ✅ Updated Dialog with proper bottom curve cutout
-  void _showCategoryDialog(BuildContext context, MenuViewModel menuViewModel) {
-    showDialog(
-      context: context,
-      barrierColor: Colors.black.withOpacity(0.5),
-      builder: (BuildContext context) {
-        return Stack(
-          children: [
-            Positioned(
-              left: 16,
-              right: 16,
-              top: 150,
-              bottom: 180, // Adjusted to account for button container
-              child: Material(
-                color: Colors.transparent,
-                child: ClipPath(
-                  clipper: BottomCircleClipper(),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.15),
-                          blurRadius: 15,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: ListView.separated(
-                      padding: const EdgeInsets.only(
-                        top: 16,
-                        bottom: 40, // Extra padding for curve
-                        left: 16,
-                        right: 16,
-                      ),
-                      shrinkWrap: true,
-                      itemCount: menuViewModel.categories.length,
-                      separatorBuilder:
-                          (context, index) =>
-                              Divider(color: Colors.grey.shade300, height: 1),
-                      itemBuilder: (context, index) {
-                        final category = menuViewModel.categories[index];
-                        return InkWell(
-                          onTap: () {
-                            // menuViewModel.setSelectedCategory(category);
-                            Navigator.pop(context);
-                            setState(() => isDialogOpen = false);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 14,
-                              horizontal: 20,
-                            ),
-                            child: Center(
-                              child: Text(
-                                category,
-                                style: AppTextStyles.body2.copyWith(
-                                  color: AppColors.textPrimary,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+void _showCategoryDialog(BuildContext context, MenuViewModel menuViewModel) {
+  final screenWidth = MediaQuery.of(context).size.width;
+  final dialogWidth = screenWidth * 0.7; // ✅ narrower width (~70% of screen)
+
+  showDialog(
+    context: context,
+    barrierColor: Colors.black.withOpacity(0.5),
+    builder: (BuildContext context) {
+      return Center( // ✅ centers the dialog automatically
+        child: Material(
+          color: Colors.transparent,
+          child: ClipPath(
+            clipper: BottomCircleClipper(), // ✅ unchanged clipper
+            child: Container(
+              width: dialogWidth, // ✅ narrower width applied
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 15,
+                    offset: const Offset(0, 6),
                   ),
+                ],
+              ),
+              child: ListView.separated(
+                padding: const EdgeInsets.only(
+                  top: 30,
+                  bottom: 90, // Extra padding for curve
+                  left: 16,
+                  right: 16,
                 ),
+                shrinkWrap: true,
+                itemCount: menuViewModel.categories.length,
+                separatorBuilder: (context, index) =>
+                    Divider(color: Colors.grey.shade300, height: 1),
+                itemBuilder: (context, index) {
+                  final category = menuViewModel.categories[index];
+                  return InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                      setState(() => isDialogOpen = false);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 14,
+                        horizontal: 20,
+                      ),
+                      child: Center(
+                        child: Text(
+                          category,
+                          style: AppTextStyles.body2.copyWith(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
-          ],
-        );
-      },
-    ).then((_) => setState(() => isDialogOpen = false));
-  }
+          ),
+        ),
+      );
+    },
+  ).then((_) => setState(() => isDialogOpen = false));
 }
-
+}
 /// 🔹 Custom clipper for curved bottom (for floating button cutout)
 class BottomCircleClipper extends CustomClipper<Path> {
+  final double circleRadius;
+  final double verticalOffset; // Fine-tuning offset
+
+  BottomCircleClipper({
+    this.circleRadius = 40,
+    this.verticalOffset = 10, // Adjust upward or downward if needed
+  });
+
   @override
   Path getClip(Size size) {
     final path = Path();
@@ -477,42 +474,26 @@ class BottomCircleClipper extends CustomClipper<Path> {
     path.quadraticBezierTo(size.width, 0, size.width, 20);
 
     // Right edge down
-    path.lineTo(size.width, size.height - 20);
+    path.lineTo(size.width, size.height - 20 - verticalOffset);
 
-    // Move towards center before the curve (from right)
-    path.lineTo(size.width / 2 + 120, size.height - 20);
+    // Go straight to the circle start point
+    path.lineTo(size.width / 2 + circleRadius, size.height - 20 - verticalOffset);
 
-    // Smooth transition into the curve (right side)
-    path.quadraticBezierTo(
-      size.width / 2 + 80,
-      size.height - 20,
-      size.width / 2 + 60,
-      size.height,
-    );
-
-    // Semi-circle cutout for the button
+    // ✅ Clean semi-circle cutout for bottom button
     path.arcToPoint(
-      Offset(size.width / 2 - 60, size.height),
-      radius: const Radius.circular(60),
+      Offset(size.width / 2 - circleRadius, size.height - 20 - verticalOffset),
+      radius: Radius.circular(circleRadius),
       clockwise: false,
     );
 
-    // Smooth transition out of the curve (left side)
-    path.quadraticBezierTo(
-      size.width / 2 - 80,
-      size.height - 20,
-      size.width / 2 - 120,
-      size.height - 20,
-    );
-
-    // Left edge back up
-    path.lineTo(0, size.height - 20);
+    // Left edge straight up again
+    path.lineTo(0, size.height - 20 - verticalOffset);
 
     path.close();
-
     return path;
   }
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
+
