@@ -2,10 +2,12 @@ import 'package:base_project/app/constants/app_colors.dart';
 import 'package:base_project/app/constants/app_custom_field.dart';
 import 'package:base_project/app/constants/app_fonts.dart';
 import 'package:base_project/app/constants/app_menu_card.dart';
+import 'package:base_project/app/constants/side_menu_route.dart';
 import 'package:base_project/app/modules/cart/controller/cart_controller.dart';
 import 'package:base_project/app/modules/cart/view/cart_screen.dart';
 import 'package:base_project/app/modules/menu/controller/menu_controller.dart';
 import 'package:base_project/app/modules/menu/views/product_detail_screen.dart';
+import 'package:base_project/app/modules/menu/views/side_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,63 +26,72 @@ class _MenuScreenState extends State<MenuScreen> {
     return Scaffold(
       backgroundColor: AppColors.appBarColor,
       appBar: AppBar(
-  backgroundColor: AppColors.appBarColor,
-  elevation: 0,
-  centerTitle: true,
-  leadingWidth: 70,
-  leading: Container(
-    margin: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      shape: BoxShape.circle, // ✅ Makes it perfectly circular
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 6,
-          offset: const Offset(0, 2),
+        backgroundColor: AppColors.appBarColor,
+        elevation: 0,
+        centerTitle: true,
+        leadingWidth: 70,
+        leading: Container(
+          margin: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle, // ✅ Makes it perfectly circular
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              showDialog(
+                context: context,
+                barrierColor: Colors.black54,
+                barrierDismissible: true,
+                builder: (BuildContext context) {
+                  return const Align(
+                    alignment: Alignment.centerLeft,
+                    child: CustomSideMenu(),
+                  );
+                },
+              );
+            },
+          ),
         ),
-      ],
-    ),
-    child: IconButton(
-      icon: const Icon(Icons.menu, color: AppColors.textPrimary),
-      onPressed: () {},
-    ),
-  ),
-  title: Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Text('Select Menu', style: AppTextStyles.heading3),
-      const SizedBox(height: 2),
-      Text(
-        'May 14, 2025  12:30pm',
-        style: AppTextStyles.caption.copyWith(color: AppColors.primary),
-      ),
-    ],
-  ),
-  actions: [
-    Container(
-      margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle, // ✅ Makes it circular
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Select Menu', style: AppTextStyles.heading3),
+            const SizedBox(height: 2),
+            Text(
+              'May 14, 2025  12:30pm',
+              style: AppTextStyles.caption.copyWith(color: AppColors.primary),
+            ),
+          ],
+        ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle, // ✅ Makes it circular
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.save, color: AppColors.textPrimary),
+              onPressed: () {},
+            ),
           ),
         ],
       ),
-      child: IconButton(
-        icon: const Icon(Icons.save,
-            color: AppColors.textPrimary),
-        onPressed: () {},
-      ),
-    ),
-  ],
-)
-
-,
       body: _buildMenuItems(context),
       floatingActionButton: _buildCartButton(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -89,62 +100,72 @@ class _MenuScreenState extends State<MenuScreen> {
 
   Widget _buildMenuItems(BuildContext context) {
     return Consumer2<MenuViewModel, CartViewModel>(
-      builder: (context, menu, cart, _) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: CustomInputField(
-              hintText: 'Search...',
-              prefixIcon: const Icon(Icons.search,
-                  size: 20, color: AppColors.iconColor),
-              onChanged: (value) => menu.setSearchQuery(value),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: InkWell(
-              onTap: () {
-                setState(() => isDialogOpen = true);
-                _showCategoryDialog(context, menu);
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(menu.selectedCategory, style: AppTextStyles.heading3),
-                  const SizedBox(width: 8),
-                  const Icon(Icons.keyboard_arrow_down,
-                      color: AppColors.textPrimary),
-                ],
+      builder:
+          (context, menu, cart, _) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: CustomInputField(
+                  hintText: 'Search...',
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    size: 20,
+                    color: AppColors.iconColor,
+                  ),
+                  onChanged: (value) => menu.setSearchQuery(value),
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: InkWell(
+                  onTap: () {
+                    setState(() => isDialogOpen = true);
+                    _showCategoryDialog(context, menu);
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        menu.selectedCategory,
+                        style: AppTextStyles.heading3,
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: AppColors.textPrimary,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: menu.filteredItems.length,
+                  itemBuilder: (context, index) {
+                    final item = menu.filteredItems[index];
+                    return MenuItemCard(
+                      item: item,
+                      onAddPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) => ProductDetailScreen(
+                                  productName: item.name,
+                                  price: item.price,
+                                ),
+                          ),
+                        );
+                      },
+                      onFavoritePressed: () => menu.toggleFavorite(item.id),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: menu.filteredItems.length,
-              itemBuilder: (context, index) {
-                final item = menu.filteredItems[index];
-                return MenuItemCard(
-  item: item,
-  onAddPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ProductDetailScreen(
-          productName: item.name,
-          price: item.price,
-        ),
-      ),
-    );
-  },
-  onFavoritePressed: () => menu.toggleFavorite(item.id),
-);
-              },
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -187,12 +208,13 @@ class _MenuScreenState extends State<MenuScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           InkWell(
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const CartScreen(),
-                              ),
-                            ),
+                            onTap:
+                                () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const CartScreen(),
+                                  ),
+                                ),
                             child: const Text(
                               'View Cart',
                               style: TextStyle(
@@ -204,8 +226,11 @@ class _MenuScreenState extends State<MenuScreen> {
                           ),
                           Row(
                             children: const [
-                              Icon(Icons.circle,
-                                  size: 10, color: AppColors.primary),
+                              Icon(
+                                Icons.circle,
+                                size: 10,
+                                color: AppColors.primary,
+                              ),
                               SizedBox(width: 8),
                               Text(
                                 'Card',
@@ -216,8 +241,11 @@ class _MenuScreenState extends State<MenuScreen> {
                                 ),
                               ),
                               SizedBox(width: 16),
-                              Icon(Icons.circle,
-                                  size: 10, color: AppColors.textSecondary),
+                              Icon(
+                                Icons.circle,
+                                size: 10,
+                                color: AppColors.textSecondary,
+                              ),
                               SizedBox(width: 8),
                               Text(
                                 'Cash',
@@ -227,8 +255,11 @@ class _MenuScreenState extends State<MenuScreen> {
                                 ),
                               ),
                               SizedBox(width: 16),
-                              Icon(Icons.circle,
-                                  size: 10, color: AppColors.textSecondary),
+                              Icon(
+                                Icons.circle,
+                                size: 10,
+                                color: AppColors.textSecondary,
+                              ),
                               SizedBox(width: 8),
                               Text(
                                 'UPI',
@@ -352,8 +383,6 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-
-
   /// ✅ Updated Dialog with proper bottom curve cutout
   void _showCategoryDialog(BuildContext context, MenuViewModel menuViewModel) {
     showDialog(
@@ -392,10 +421,9 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                       shrinkWrap: true,
                       itemCount: menuViewModel.categories.length,
-                      separatorBuilder: (context, index) => Divider(
-                        color: Colors.grey.shade300,
-                        height: 1,
-                      ),
+                      separatorBuilder:
+                          (context, index) =>
+                              Divider(color: Colors.grey.shade300, height: 1),
                       itemBuilder: (context, index) {
                         final category = menuViewModel.categories[index];
                         return InkWell(
@@ -406,7 +434,9 @@ class _MenuScreenState extends State<MenuScreen> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                vertical: 14, horizontal: 20),
+                              vertical: 14,
+                              horizontal: 20,
+                            ),
                             child: Center(
                               child: Text(
                                 category,
@@ -440,10 +470,10 @@ class BottomCircleClipper extends CustomClipper<Path> {
     // Rounded top-left corner
     path.moveTo(0, 20);
     path.quadraticBezierTo(0, 0, 20, 0);
-    
+
     // Top edge
     path.lineTo(size.width - 20, 0);
-    
+
     // Rounded top-right corner
     path.quadraticBezierTo(size.width, 0, size.width, 20);
 
@@ -478,7 +508,7 @@ class BottomCircleClipper extends CustomClipper<Path> {
 
     // Left edge back up
     path.lineTo(0, size.height - 20);
-    
+
     path.close();
 
     return path;
@@ -487,6 +517,3 @@ class BottomCircleClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
-
-
-
